@@ -28,11 +28,23 @@ export function displayDiamond(){
         {
             name: "coordinates",
             size: 3,
-            data: [0, 1, 0, 1, 0, 0, -1, 0, 0, 0, -1, 0]
+            data: [
+                0, 1, 0, // coordinates
+                1, 0, 0, // color
+                1, 0, 0, 
+                0, 1, 0,
+                -1, 0, 0, 
+                0, 0, 1,
+                0, -1, 0,
+                1, 1, 0
+            ],
+            offset: 0,
+            stride: 6
         }, {
             name: "colors",
             size: 3,
-            data: [1, 0, 0,  0, 1, 0, 0, 0, 1, 1, 1,0]
+            offset: 3,
+            stride: 6
         }
     ])
 
@@ -43,10 +55,12 @@ export function displayDiamond(){
         gl.uniform1f(theta, th);
 
         WebGLHelper.clear(gl, [1.0, 1.0, 1.0, 1.0])
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+        gl.drawArrays(gl.LINE_STRIP, 0, 4)
 
         window.requestAnimationFrame(animate)
     }
+
+    //setInterval(animate, 10)
 
     animate()
 }

@@ -15,5 +15,5 @@ import fs_script from "../shaders/fragment.glsl"
 // import { displayBg } from './bg'
 // displayBg();
 
-import { displayDiamond } from './week04/diamond'
-displayDiamond()
+import { scribble } from './week04/scribble'
+scribble()
