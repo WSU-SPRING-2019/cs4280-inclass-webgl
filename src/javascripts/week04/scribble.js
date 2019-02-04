@@ -44,8 +44,6 @@ export function scribble() {
             WebGLHelper.clear(gl, [1, 1, 1, 1]) }
     }
 
-
-
     let buffers = WebGLHelper.initBuffers(gl, program, [
         {
             name: 'coordinates',

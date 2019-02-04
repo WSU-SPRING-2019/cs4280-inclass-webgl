@@ -3,6 +3,7 @@
  * Description: a helper class for the webgl programs of cs4280
  * Version: 0.0.1
  * By: Abdulmalek Al-Gahmi
+ * Last updated: 02/03/2019
  */
 export class WebGLHelper {
   /**
@@ -74,6 +75,7 @@ export class WebGLHelper {
    */
   static initBuffers(gl, program, data) {
     let buffers = {}
+    let indexBuffers = {}
     let fSize = Float32Array.BYTES_PER_ELEMENT;
     data.forEach(function (item) {
       if (item.data !== undefined) {
@@ -89,7 +91,8 @@ export class WebGLHelper {
         }
 
         if (item.indices !== undefined) {
-          var indexBuffer = gl.createBuffer();
+          let indexBuffer = gl.createBuffer();
+          indexBuffers[item.name] = indexBuffer;
           gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
           gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(item.indices), gl.STATIC_DRAW);
         }
@@ -104,8 +107,63 @@ export class WebGLHelper {
     });
 
     program["buffers"] = buffers;
+    program["indexBuffers"] = indexBuffers;
 
     return buffers;
+  }
+
+  /**
+   * load an attribute with 1, 2, 3, or 4 values.
+   */
+  static loadAttributeF(gl, program, name, ...data) {
+    if (program.attributes === undefined) {
+      program.attributes = {};
+      program.attributes[name] = gl.getAttribLocation(program, name);
+    }
+
+    if (data !== undefined) {
+      switch (data.length) {
+        case 1:
+          gl.vertexAttrib1f(program.attributes[name], ...data);
+          break;
+        case 2:
+          gl.vertexAttrib2f(program.attributes[name], ...data);
+          break;
+        case 3:
+          gl.vertexAttrib3f(program.attributes[name], ...data);
+          break;
+        case 4:
+          gl.vertexAttrib3f(program.attributes[name], ...data);
+          break;
+      }
+    }
+  }
+
+  /**
+   * load a float uniform with 1, 2, 3, or 4 values.
+   */
+  static loadUniformF(gl, program, name, ...data) {
+    if (program.uniforms === undefined) {
+      program.uniforms = {}
+      program.uniforms[name] = gl.getUniformLocation(program, name)
+    }
+
+    if (data !== undefined) {
+      switch (data.length) {
+        case 1:
+          gl.uniform1f(program.uniforms[name], ...data);
+          break;
+        case 2:
+          gl.uniform2f(program.uniforms[name], ...data);
+          break;
+        case 3:
+          gl.uniform3f(program.uniforms[name], ...data);
+          break;
+        case 4:
+          gl.uniform4f(program.uniforms[name], ...data);
+          break;
+      }
+    }
   }
 
   /**
@@ -136,8 +194,7 @@ export class WebGLHelper {
         }
 
         if (item.indices !== undefined) {
-          let indexBuffer = gl.createBuffer();
-          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, program.indexBuffers[item.name]);
           gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(item.indices), gl.STATIC_DRAW);
         }
       }
@@ -176,7 +233,7 @@ export class WebGLHelper {
   /**
    * Converts from screen coordinates to webgl coordinates.
    */
-  static toWebGLCoordinates(e){
+  static toWebGlCoordinates(e) {
     let rect = e.target.getBoundingClientRect();
     // x = (2u - w) / w
     let x = (2 * (e.clientX - rect.left) - rect.width) / rect.width;

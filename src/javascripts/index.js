@@ -15,5 +15,5 @@ import fs_script from "../shaders/fragment.glsl"
 // import { displayBg } from './bg'
 // displayBg();
 
-import { scribble } from './week04/scribble'
-scribble()
+import { runMultiplePrograms } from './week05/multiple_programs'
+runMultiplePrograms()
