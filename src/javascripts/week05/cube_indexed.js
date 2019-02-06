@@ -24,29 +24,15 @@ class Cube {
         this.face(1, 5, 6, 2) //Right
 
         this.colors = [
-            [ 1, 0, 0 ],
-            [ 0, 1, 0 ],
-            [ 1, 1, 1 ],
-            [ 1, 1, 0 ],
-            [ 1, 0, 1 ],
-            [ 0, 1, 1 ]
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1,
+            0, 0, 0,
+            1, 1, 1,
+            1, 1, 0,
+            1, 0, 1,
+            0, 1, 1
         ]
-
-        this.v_out = []
-        for(let i of this.indices){
-            this.v_out.push(
-                thi.vertices[3 * i],
-                this.vertices[3 * i + 1],
-                this.vertices[3 * i + 2]
-            )
-        }
-
-        this.c_out = []
-        for(let c of this.colors){
-            for(let i = 0 ; i < 6; i++){
-                this.c_out.push(c[0], c[1], c[2])
-            }
-        }
     }
 
     face(a, b, c , d){
@@ -83,11 +69,12 @@ export function displayCube() {
         {
             name: 'coordinates',
             size: 3,
-            data: cube.v_out,
+            data: cube.vertices,
+            indices: cube.indices
         }, {
             name: 'colors',
             size: 3,
-            data: cube.c_out
+            data: cube.colors
         }
     ])
 
@@ -112,7 +99,7 @@ export function displayCube() {
         
         WebGLHelper.clear(gl, [1, 1, 1, 1])
         gl.uniformMatrix4fv(tranformedByLoc, false, rxyz.elements)
-        gl.drawArrays(gl.TRIANGLES, 0, cube.v_out.length / 3)
+        gl.drawElements(gl.TRIANGLES, cube.indices.length, gl.UNSIGNED_SHORT, 0)
 
         requestAnimationFrame(animate)
 
