@@ -26,7 +26,7 @@ class Cube {
         this.colors = [
             [ 1, 0, 0 ],
             [ 0, 1, 0 ],
-            [ 1, 1, 1 ],
+            [ 0, 0, 1 ],
             [ 1, 1, 0 ],
             [ 1, 0, 1 ],
             [ 0, 1, 1 ]
@@ -35,7 +35,7 @@ class Cube {
         this.v_out = []
         for(let i of this.indices){
             this.v_out.push(
-                thi.vertices[3 * i],
+                this.vertices[3 * i],
                 this.vertices[3 * i + 1],
                 this.vertices[3 * i + 2]
             )
