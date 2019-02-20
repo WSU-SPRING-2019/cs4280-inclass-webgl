@@ -15,5 +15,5 @@ import fs_script from "../shaders/fragment.glsl"
 // import { displayBg } from './bg'
 // displayBg();
 
-import { displayPyramid } from './week06/pyramid'
-displayPyramid()
+import { displayCube } from './week07/cube_transformed'
+displayCube()
