@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import * as dat from 'dat.gui'
+import { METHODS } from 'http';
 
 export function displayScene(){
     let canvas = document.querySelector("#webgl-scene")
@@ -55,14 +56,59 @@ export function displayScene(){
     scene.add(mesh)
 
 
-    camera.position.x = 100
-    camera.position.y = 100
-    camera.position.z = 100
+    // Add plane
+    geometry = new THREE.PlaneGeometry(200, 70, 20, 20)
+    material = new THREE.MeshBasicMaterial({ color: 0x00FFFF, wireframe: true })
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.rotateX(Math.PI / 2)
+    scene.add(mesh)
 
-    camera.lookAt(scene.position)
+    // Add a cube
+    geometry = new THREE.BoxGeometry(30, 30, 30)
+    material = new THREE.MeshNormalMaterial({ color: 0xFF00FF })
+    mesh = new THREE.Mesh(geometry, material)
+    scene.add(mesh)
+
+    let box = mesh.clone()
+    box.translateZ(40)
+    scene.add(box)
+
+
+    // Add sphere
+    geometry = new THREE.SphereGeometry(20, 40, 40)
+    material = new THREE.MeshNormalMaterial({ color: 0xFF77FF, wireframe: true })
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.position.x = 30;
+    mesh.position.y = 30;
+    mesh.position.z = 30;
+
+    scene.add(mesh)
 
     canvas.appendChild(renderer.domElement)
-    renderer.render(scene, camera)
+
+    let controls = {
+        radius: 400,
+        theta: 1, 
+        phi: 1
+    }
+
+    function animate(){
+        camera.position.x = controls.radius * Math.sin(controls.theta) * Math.cos(controls.phi)
+        camera.position.y = controls.radius * Math.cos(controls.theta)
+        camera.position.z = controls.radius * Math.sin(controls.theta) * Math.sin(controls.phi)
+
+        camera.lookAt(scene.position)
+        renderer.render(scene, camera)
+    }
+
+    animate();
+
+    let gui = new dat.GUI()
+    let f = gui.addFolder("Camera")
+    f.add(controls, 'radius').min(50).max(900).onChange(animate)
+    f.add(controls, 'theta').min(-1 * Math.PI).max(Math.PI).onChange(animate)
+    f.add(controls, 'phi').min(-1 * Math.PI).max(Math.PI).onChange(animate)
+    f.open()
 
 
 }
