@@ -15,5 +15,5 @@ import fs_script from "../shaders/fragment.glsl"
 // import { displayBg } from './bg'
 // displayBg();
 
-import { displayScene } from './week10/three-meshes'
+import { displayScene } from './week10/three-lighting'
 displayScene()
