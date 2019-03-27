@@ -17,7 +17,13 @@ export function displayScene() {
     // Loading Textures
     let texLoader = new THREE.TextureLoader()
     let textures = {
-        waldo: texLoader.load("./images/waldo.png", function () {
+        crate: texLoader.load("./images/crate0.png", function () {
+            renderer.render(scene, camera)
+        }),
+        crate_bump: texLoader.load("./images/crate0_bump.png", function () {
+            renderer.render(scene, camera)
+        }),
+        crate_normal: texLoader.load("./images/crate0_normal.png", function () {
             renderer.render(scene, camera)
         }),
         earth: texLoader.load("./images/earth.jpg", function () {
@@ -44,7 +50,10 @@ export function displayScene() {
         material: 'Basic',
         intensity: 1,
         spotLight_target: "Cube",
-        enable_shadows: false
+        enable_shadows: false,
+        enable_bump_map: false,
+        bump_scale: .2,
+        enable_normal_map: false
     }
 
     // Add a plane
@@ -62,7 +71,7 @@ export function displayScene() {
     let cube = new THREE.Mesh(geometry)
     cube.materialParams = {}
     cube.position.set(-200, 50, -100)
-    cube.name = 'waldo'
+    cube.name = 'crate'
     cube.castShadow = true
     scene.add(cube)
 
@@ -140,6 +149,21 @@ export function displayScene() {
 
             if (textures[obj.name]) {
                 obj.material.map = textures[obj.name]
+
+                if(obj.name === "crate"){
+                    if(controls.enable_bump_map){
+                        obj.material.bumpMap = textures['crate_bump']
+                        obj.material.bumpScale = controls.bump_scale
+                    }else{
+                        obj.material.bumpMap = null
+                    }
+
+                    if(controls.enable_normal_map){
+                        obj.material.normalMap = textures['crate_normal']
+                    }else{
+                        obj.material.normalMap = null
+                    }
+                }
             }
         }
 
@@ -195,11 +219,11 @@ export function displayScene() {
     f.add(controls, 'radius').min(50).max(900).onChange(animate)
     f.add(controls, 'theta').min(-1 * Math.PI).max(Math.PI).onChange(animate)
     f.add(controls, 'phi').min(-1 * Math.PI).max(Math.PI).onChange(animate)
-    f.open()
+    //f.open()
 
     f = gui.addFolder("Material")
     f.add(controls, 'material', ["Basic", "Lambert", "Phong", "Standard"]).onChange(animate)
-    f.open()
+    //f.open()
 
     f = gui.addFolder("Light sources")
     f.add(controls, 'ambient').onChange(animate)
@@ -209,6 +233,9 @@ export function displayScene() {
     f.add(controls, 'intensity').min(0).max(10).onChange(animate)
     f.add(controls, 'spotLight_target', ["Cube", "Tube", "Sphere"]).onChange(animate)
     f.add(controls, "enable_shadows").onChange(animate)
-    f.open()
+    f.add(controls, "enable_bump_map").onChange(animate)
+    f.add(controls, 'bump_scale').min(0).max(1).step(.1).onChange(animate)
+    f.add(controls, "enable_normal_map").onChange(animate)
+    //f.open()
 
 }
