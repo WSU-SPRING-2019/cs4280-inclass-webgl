@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 window.THREE = THREE
-import {MTLLoader, OBJLoader} from 'three-obj-mtl-loader'
+import { MTLLoader, OBJLoader } from 'three-obj-mtl-loader'
 let OrbitControls = require("threejs-controls/OrbitControls")
 import * as dat from 'dat.gui'
 
@@ -21,11 +21,11 @@ export function displayScene() {
     let mtlLoader = new MTLLoader()
     let objLoader = new OBJLoader()
     let city = null
-    mtlLoader.load("./assets/city.mtl", function(material){
+    mtlLoader.load("./assets/city.mtl", function (material) {
         material.preload()
         objLoader.setMaterials(material)
-        objLoader.load("./assets/city.obj", function(object){
-            for(let o of object.children){
+        objLoader.load("./assets/city.obj", function (object) {
+            for (let o of object.children) {
                 let c = new THREE.Color(0xFFFFFF)
                 c.setHex(Math.random() * 0xFFFFFF)
                 o.material = new THREE.MeshLambertMaterial({
@@ -40,7 +40,7 @@ export function displayScene() {
         })
 
     })
-    
+
     let controls = {
         radius: 400,
         theta: 1,
@@ -58,15 +58,15 @@ export function displayScene() {
         enable_normal_map: false
     }
 
-    
 
 
 
-   
 
-    
 
-    
+
+
+
+
 
 
     // Light sources
@@ -91,16 +91,16 @@ export function displayScene() {
 
 
     let cameraConrols = new OrbitControls(camera, renderer.domElement)
-    cameraConrols.addEventListener("change", function(){
+    cameraConrols.addEventListener("change", function () {
         renderer.render(scene, camera)
     })
-    
+
     camera.position.x = controls.radius * Math.sin(controls.theta) * Math.cos(controls.phi)
     camera.position.y = controls.radius * Math.cos(controls.theta)
     camera.position.z = controls.radius * Math.sin(controls.theta) * Math.sin(controls.phi)
 
     let raycaster = new THREE.Raycaster()
-    let mouse = new THREE.Vector2()     
+    let mouse = new THREE.Vector2()
 
     canvas.addEventListener("mouseup", e => {
         let rect = e.target.getBoundingClientRect()
@@ -112,7 +112,7 @@ export function displayScene() {
 
         raycaster.setFromCamera(mouse, camera)
         let intersects = raycaster.intersectObjects(city.children)
-        for(let intersect of intersects){
+        for (let intersect of intersects) {
             let obj = intersect.object
             city.remove(obj)
         }
@@ -120,21 +120,21 @@ export function displayScene() {
         renderer.render(scene, camera)
     })
 
-    window.onkeyup = function(e){
+    window.onkeyup = function (e) {
         let t = cameraConrols.target
         console.log(e.key)
         console.log(e.keyCode)
-        switch(e.keyCode){
+        switch (e.keyCode) {
             case 40: // down
-            break;
+                break;
             case 38: //up
-            break;
+                break;
             case 39: // right
-            t.position.set(t.x - 5, t.y, t.z)
-            break
+                t.position.set(t.x - 5, t.y, t.z)
+                break
             case 37: // left
-            t.position.set(t.x + 5, t.y, t.z)
-            break
+                t.position.set(t.x + 5, t.y, t.z)
+                break
 
         }
         renderer.render(scene, camera)
