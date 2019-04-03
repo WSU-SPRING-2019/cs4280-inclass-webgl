@@ -20,6 +20,7 @@ export function displayScene() {
     // Load city
     let mtlLoader = new MTLLoader()
     let objLoader = new OBJLoader()
+    let city = null
     mtlLoader.load("./assets/city.mtl", function(material){
         material.preload()
         objLoader.setMaterials(material)
@@ -32,6 +33,7 @@ export function displayScene() {
                 })
             }
 
+            city = object
             scene.add(object)
 
             renderer.render(scene, camera)
@@ -97,6 +99,47 @@ export function displayScene() {
     camera.position.y = controls.radius * Math.cos(controls.theta)
     camera.position.z = controls.radius * Math.sin(controls.theta) * Math.sin(controls.phi)
 
+    let raycaster = new THREE.Raycaster()
+    let mouse = new THREE.Vector2()     
+
+    canvas.addEventListener("mouseup", e => {
+        let rect = e.target.getBoundingClientRect()
+
+        // x = (2u - w) / w
+        mouse.x = (2 * (e.clientX - rect.left) - rect.width) / rect.width
+        // y = (h - 2v) / h
+        mouse.y = (rect.height - 2 * (e.clientY - rect.top)) / rect.height
+
+        raycaster.setFromCamera(mouse, camera)
+        let intersects = raycaster.intersectObjects(city.children)
+        for(let intersect of intersects){
+            let obj = intersect.object
+            city.remove(obj)
+        }
+
+        renderer.render(scene, camera)
+    })
+
+    window.onkeyup = function(e){
+        let t = cameraConrols.target
+        console.log(e.key)
+        console.log(e.keyCode)
+        switch(e.keyCode){
+            case 40: // down
+            break;
+            case 38: //up
+            break;
+            case 39: // right
+            t.position.set(t.x - 5, t.y, t.z)
+            break
+            case 37: // left
+            t.position.set(t.x + 5, t.y, t.z)
+            break
+
+        }
+        renderer.render(scene, camera)
+
+    }
     function animate() {
 
         camera.lookAt(scene.position)
